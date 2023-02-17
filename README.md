@@ -2,7 +2,7 @@ Repo for tools to remove workflow hurdles in using ROS2.
 
 [![Github All Releases](https://img.shields.io/github/downloads/rydb/ROS2_easy/total.svg)]()
 
-![](https://github.com/user/rydb/ROS2_easy.pngROS2_easy.png) 
+![](https://github.com/user/rydb/ROS2_easy/ROS2_easy.png) 
 
 ## ROS2 file structure to use:
 	```python
