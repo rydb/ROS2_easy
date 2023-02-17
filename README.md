@@ -1,21 +1,25 @@
 Repo for tools to remove workflow hurdles in using ROS2.
 
+[![Github All Releases](https://img.shields.io/github/downloads/rydb/ROS2_easy/total.svg)]()
 
-Required file structure to use:
+![](https://github.com/user/rydb/ROS2_easy.pngROS2_easy.png) 
+
+## ROS2 file structure to use:
+	```python
 	Root_folder:
 		thing_that_calls_this.py
 		Config_Storing_Package/
 			src/
 			models/
 			rviz/
-			
+	```		
 		
 (ONLY TESTED ON UBUNTU AS OF NOW)
 
-To use:
+## To Use:
 	See turtlebot3 example(need to add)
 
-Included:
+## Tools:
 	
 	FreeCAD model -> urdf converter:
 		(insert gif)
