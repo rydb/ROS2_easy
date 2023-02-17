@@ -1,23 +1,24 @@
-Repo for tools to remove workflow hurdles in using ROS2.
+
+![](ROS2_easy.png) 
 
 [![Github All Releases](https://img.shields.io/github/downloads/rydb/ROS2_easy/total.svg)]()
 
-![](https://github.com/user/rydb/ROS2_easy/ROS2_easy.png) 
+## Introduction
 
-## ROS2 file structure to use:
-	```python
-	Root_folder:
-		thing_that_calls_this.py
-		Config_Storing_Package/
-			src/
-			models/
-			rviz/
-	```		
-		
-(ONLY TESTED ON UBUNTU AS OF NOW)
+Repo for tools to remove workflow hurdles in using ROS2.
 
-## To Use:
-	See turtlebot3 example(need to add)
+
+## Dependencies
+
+- ROS2(only tested on foxy)
+- Bash
+- RVIZ2
+  
+## Installation
+
+```bash
+pip install ros2_easy
+```
 
 ## Tools:
 	
@@ -52,3 +53,22 @@ Repo for tools to remove workflow hurdles in using ROS2.
 			sources your built packages
 			
 			runs your generated launch file from the launch file generator
+
+## ROS2 file structure to use:
+
+```python
+Root_folder:
+	thing_that_calls_this.py
+		src/
+			Config_Storing_Package/
+			urdfs/
+			models/
+			rviz/
+```		
+		
+(ONLY TESTED ON UBUNTU AS OF NOW)
+
+## To Use:
+	See turtlebot3 example(need to add)
+
+
