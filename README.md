@@ -3,10 +3,9 @@
 
 [![Github All Releases](https://img.shields.io/github/downloads/rydb/ROS2_easy/total.svg)]()
 
-## Introduction
+## Description
 
-Repo for tools to remove workflow hurdles in using ROS2.
-
+This is a collection of tools to remove ROS2's worflow hurdles.
 
 ## Dependencies
 
