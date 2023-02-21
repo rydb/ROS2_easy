@@ -18,7 +18,7 @@ from .classes.launch_configuration import launch_configuration
 
 
 split_str = "/"
-log_path =  "simple_run_logs/simple_run.log"
+log_path =  "log/simple_run.log"
 """path of log file for simple_run"""
 log_path_folder = "".join([x + split_str for x in log_path.split(split_str)[0:-1]]) # get folder path from file path
 

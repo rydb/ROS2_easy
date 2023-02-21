@@ -9,9 +9,10 @@ This is a collection of tools to remove ROS2's worflow hurdles.
 
 ## Dependencies
 
-- ROS2(only tested on foxy)
+- [ROS2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
 - Bash
 - RVIZ2
+  
   
 ## Installation
 
@@ -21,6 +22,7 @@ pip install ros2_easy
 
 ## Tools:
 	
+
 	FreeCAD model -> urdf converter:
 		(insert gif)
 		

@@ -42,9 +42,9 @@ class launch_configuration():
     external_programs_to_run: Optional[typing.List[Cmd_Program]] = None
     """External programs to run that aren't ROS2 packages. E.G: Gazebo/Ignition"""
 
-    def save_self_as_yaml(self):
+    def save_self_as_yaml(self, dir_path=""):
         """save relevant information about this launch configuration into a yaml file"""
-        with open("launch_conf_info.yaml", "w") as file:
+        with open(dir_path + "launch_conf_info.yaml", "w") as file:
             
             #dump relevant information thats package specific
             yaml.dump(self.config_store_pkg.path_dict, file)
