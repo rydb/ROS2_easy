@@ -13,6 +13,8 @@ from .logger import *
 
 
 MODEL_FORMAT = ".FCStd"
+URDF_FILE_EXTENSION = ".xml"
+"""urdf file extensions have been finicky when testing, so setting expected urdf extension to .xml since thats what has worked for me"""
 
 @dataclass
 class launch_configuration():
@@ -65,3 +67,8 @@ class launch_configuration():
         """returns path to model file used by this launch configuration. `!!!Assuming there is one, and the file is named after the urdf as it should be if made by the urdf converter!!!`"""
 
         return self.config_store_pkg.path_dict["MODELS"] + self.urdf_file_name + MODEL_FORMAT
+    
+    @property
+    def urdf_path(self):
+        """return absolute path to urdf file loaded by this launch configuration"""
+        return self.config_store_pkg.path_dict["URDFS"] + self.urdf_file_name + URDF_FILE_EXTENSION

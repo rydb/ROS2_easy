@@ -14,7 +14,7 @@ from inspect import getsourcefile
 from os.path import abspath
 
 from .classes.logger import return_logger
-from .classes.launch_configuration import launch_configuration
+from .classes.launch_configuration import *
 
 
 split_str = "/"
@@ -311,7 +311,7 @@ def create_urdf_of_model(launch_conf: launch_configuration):
 
     os.system("python3 %s" % urdf_converter_macro_path)
 
-    logger.info("exported FreeCAD model to urdf file, ||%s||" % (launch_conf.urdf_file_name + urdf_file_extension))
+    logger.info("exported FreeCAD model to urdf file, ||%s||" % (launch_conf.urdf_file_name + URDF_FILE_EXTENSION))
 
 #env_to_use = real_rviz_env_conf
 """ros2 configuration to use, look at lauch configurations to see what each one does."""
@@ -319,23 +319,27 @@ def create_urdf_of_model(launch_conf: launch_configuration):
 def launch_gazebo_world(launch_conf: launch_configuration):
     """
     generate an urdf file, convert that to an sdf file, then launch that sdf file.
-    
-    BROKEN: I haven't found a way to get an sdf to launch in gazebo ignition. Help here needed
-    """
-#    create_urdf_of_model(env_to_use, freecad_macros_folder_name, model_file_name, launch_conf.urdf_file)
-#    sdf_path =  "%s.sdf" % launch_conf.config_store_pkg.urdf_path
-#    final_command = "gazebo.gz sdf -p %s" % (launch_conf.config_store_pkg.urdf_path)
 
-#    sdf_as_bytes = subprocess.check_output(final_command, shell=True)
-#    """gets gazebo to use its urdf -> sdf utility, and sub process captures its output as bytes"""
-#    sdf_as_string = ''.join(map(chr, sdf_as_bytes))
-#    """do ??? -^ to convert the bytes output to a string"""
-#    sdf_file = open(sdf_path, "w")
-#    """open a new file to write the sdf_as_string to."""
-#    sdf_file.write(sdf_as_string)
-#    sdf_file.close()
+    Refer how to install gazebo(on ubuntu) here:
+    https://gazebosim.org/docs/garden/install_ubuntu
+    """
+
+    create_urdf_of_model(launch_conf)
+    sdf_path =  "%s.sdf" % launch_conf.urdf_path.split(URDF_FILE_EXTENSION)[0]
+    final_command = "gz sdf -p %s" % (launch_conf.urdf_path)
+
+    #print(sdf_path)
+    #print(final_command)
+    sdf_as_bytes = subprocess.check_output(final_command, shell=True)
+    """gets gazebo to use its urdf -> sdf utility, and sub process captures its output as bytes"""
+    sdf_as_string = ''.join(map(chr, sdf_as_bytes))
+    """do ??? -^ to convert the bytes output to a string"""
+    sdf_file = open(sdf_path, "w")
+    """open a new file to write the sdf_as_string to."""
+    sdf_file.write(sdf_as_string)
+    sdf_file.close()
     
-    launch_world_command = "gazebo.gz service -s /world/empty/create --reqtype ignition.msgs.EntityFactory --reptype ignition.msgs.Boolean --timeout 1000 --req 'sdf_filename: \"%s\", name: \"urdf_model\"'" % sdf_path
-    print(launch_world_command)
+    launch_world_command = "gz sim %s " % sdf_path
+    #print(launch_world_command)
     os.system(launch_world_command)
 

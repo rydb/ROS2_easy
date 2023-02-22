@@ -5,15 +5,16 @@
 
 ## Description
 
-This is a collection of tools to remove ROS2's worflow hurdles.
+This is a collection of tools to remove ROS2's worflow hurdles for python3/colcon based projects
 
-## Dependencies
+## Requirements
 
 - [ROS2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
 - Bash
 - RVIZ2
-  
-  
+- colcon  
+
+- Packages must be <span style="color:red"> colcon</span> based. Cmake packages are currently not supported
 ## Installation
 
 ```bash
@@ -70,6 +71,9 @@ Root_folder:
 (ONLY TESTED ON UBUNTU AS OF NOW)
 
 ## To Use:
-	See turtlebot3 example(need to add)
+	See simple_model_example
+
+## TODO:
+	Add Cmake support
 
 

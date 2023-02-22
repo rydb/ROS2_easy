@@ -6,7 +6,7 @@ import os
 PROJECT_DIR = os.getcwd() + "/"
 
 split_str = "/"
-log_path =  PROJECT_DIR + "simple_run_logs/simple_run.log"
+log_path =  PROJECT_DIR + "log/simple_run.log"
 """path of log file for simple_run"""
 log_path_folder = "".join([x + split_str for x in log_path.split(split_str)[0:-1]]) # get folder path from file path
 
