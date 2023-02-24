@@ -1,0 +1,6 @@
+MODELS: /home/rydb/Projects/ROS2_easy/ros2_easy/src/model_pkg/models/
+RVIZ: /home/rydb/Projects/ROS2_easy/ros2_easy/src/model_pkg/rviz/
+URDFS: /home/rydb/Projects/ROS2_easy/ros2_easy/src/model_pkg/urdf/
+LOGS_DIR: /home/rydb/Projects/ROS2_easy/ros2_easy/log/
+PROJECT_DIR: /home/rydb/Projects/ROS2_easy/ros2_easy/
+URDF_NAME: diff_bot

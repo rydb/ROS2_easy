@@ -323,13 +323,13 @@ def launch_gazebo_world(launch_conf: launch_configuration):
     Refer how to install gazebo(on ubuntu) here:
     https://gazebosim.org/docs/garden/install_ubuntu
     """
+    gazebo_bash_script_file_path = current_py_folder + "gazebo_bash.sh"
 
     create_urdf_of_model(launch_conf)
     sdf_path =  "%s.sdf" % launch_conf.urdf_path.split(URDF_FILE_EXTENSION)[0]
     final_command = "gz sdf -p %s" % (launch_conf.urdf_path)
 
-    #print(sdf_path)
-    #print(final_command)
+
     sdf_as_bytes = subprocess.check_output(final_command, shell=True)
     """gets gazebo to use its urdf -> sdf utility, and sub process captures its output as bytes"""
     sdf_as_string = ''.join(map(chr, sdf_as_bytes))
@@ -339,7 +339,33 @@ def launch_gazebo_world(launch_conf: launch_configuration):
     sdf_file.write(sdf_as_string)
     sdf_file.close()
     
-    launch_world_command = "gz sim %s " % sdf_path
-    #print(launch_world_command)
-    os.system(launch_world_command)
+    
+
+    f = open(gazebo_bash_script_file_path, "w")
+    """write down all shell variables requires for gazebo to run in a file, and then run that file as a sub_process using that file"""
+
+
+    f.write("#!/bin/bash\n\n\n")
+    #requires because ???
+    
+    f.write("killall ruby\n\n")
+    """
+    for some godforsaken reason, gazebo is labeled 'ruby' as a process, and if ubuntu bug report is running while gazebo is also running, gazebo will glich 
+    and NOT close. Meaning, new sdfs wont load properly.. -.-
+
+    until gazebo gives proper process names to these services, this script will need this command to close them
+
+    OR
+
+    a way to capture the process name of the created process could be added to this in order to prevent hanging of the service
+    """
+    f.write("export GZ_SIM_RESOURCE_PATH=%s\n\n" % (PROJECT_DIR + "src:"))
+
+    launch_world_command = "gz sim %s\n\n" % sdf_path
+    f.write(launch_world_command)
+    f.close()
+    os.system("chmod a+x %s" % (gazebo_bash_script_file_path))
+    #give bash script execute privleges so It can be executed
+
+    rc = subprocess.call("%s" % gazebo_bash_script_file_path)
 

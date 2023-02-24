@@ -599,6 +599,7 @@ wheel_left = Model(model_pkg_dir, robot_model_path, "LeftWheel", "continuous", "
 wheel_right = Model(model_pkg_dir, robot_model_path, "RightWheel", "continuous", "right_wheel", Generic_PETG)
 
 sub_models=[wheel_left, wheel_right]
+#sub_models=None
 body = Model(model_pkg_dir, robot_model_path, "BodyBase", "fixed", "base", Generic_PETG, sub_models=sub_models)
 
 
