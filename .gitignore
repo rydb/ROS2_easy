@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # linux terminal stuff/stuff to this specific project
-.sh
-.yaml
+*.sh
+*.yaml
 log/
 install/
