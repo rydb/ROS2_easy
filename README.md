@@ -1,7 +1,22 @@
 
 ![](ROS2_easy.png) 
 
+
 [![Github All Releases](https://img.shields.io/github/downloads/rydb/ROS2_easy/total.svg)]()
+
+- [Description](#description)
+- [Requirements](#requirements)
+- [Optional Requirements:](#optional-requirements)
+- [Installation](#installation)
+- [To demo](#to-demo)
+- [To use:](#to-use)
+- [Tools:](#tools)
+- [setup.py replacer:](#setuppy-replacer)
+- [launch file generator:](#launch-file-generator)
+- [ros2 enviorment runner:](#ros2-enviorment-runner)
+- [gazebo sdf loader(HELP NEEDED):](#gazebo-sdf-loaderhelp-needed)
+- [(FREECAD MODELS ONLY \& WIP): model -\> urdf converter](#freecad-models-only--wip-model---urdf-converter)
+
 
 ## Description
 
@@ -12,13 +27,94 @@ This is a collection of tools to remove ROS2's worflow hurdles for python3/colco
 - [ROS2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
 - Bash
 - RVIZ2
-- colcon  
+- colcon
 
-- Packages must be <span style="color:red"> colcon</span> based. Cmake packages are currently not supported
+## Optional Requirements:
+
+- [snapcraft](https://snapcraft.io/snapcraft) + FreeCAD(if using the URDF converter)
 ## Installation
 
 ```bash
 pip install ros2_easy
+```
+if using the model -> urdf -> sdf converter for FreeCAD as well:
+```bash
+sudo snap install freecad
+freecad.pip install pycollada
+freecad.pip install trimesh
+```
+
+## To demo
+
+```
+run simple_run_caller.py
+```
+
+## To use:
+
+1: ensure your ROS2 file structure is in the following format:
+
+```
+/project_dir
+	/src
+		/example_pkg
+			/rviz
+				example_rviz.rviz
+			/launch
+			/example_pkg
+				__init__.py
+				sample_code.py
+			/urdf
+
+			/models
+				(OPTIONAL)
+				FreeCAD_model.FCstd
+				
+			package.xml
+			setup.cfg
+			setup.py
+		/other_pkg1
+		/other_pkg2
+	simple_run_caller.py
+	export_model_to_urdf.py  #if using the FreeCAD urdf_converter
+```
+2: define your packages in terms of ros2_easy ```Package``` objects. E.G:
+
+```python
+#for example package
+example_pkg = Package("example_pkg", "sample_code", build=True, entry_point="main")
+
+#for rviz(to be moved to common_packages later)
+rviz2_config_name = "rviz_config_test.rviz"
+rviz2_pkg = Package("rviz2", "rviz2", config=Config(config_file_name=rviz2_config_name), optional_launch_file_node_args= {"arguments": "['-d', share_directory + '/rviz/%s']" % rviz2_config_name})
+```
+
+3: define your ros2 project enviorment as a ros2_easy ```launch_configuration```. E.G:
+
+```python
+rviz_env_conf = launch_configuration(
+    config_store_pkg=example_pkg,
+    launch_file="example_launch.py",
+    urdf_file_name="FreeCAD_model",
+    packages_to_run=[example_pkg, rviz2_pkg, rqt_pkg, robot_state_publisher_pkg],
+    )
+	"""launch configuration for testing sample_code.py""""
+```
+
+4: run the tools you'd like to use
+
+```python
+#add all folders in example_pkg to .install folder
+simple_run.replace_setup_py(rviz_env_conf)
+#generate a launch file to run based on launch_configuration
+simple_run.generate_launch_py(rviz_env_conf)
+#(OPTIONAL AND WIP) convert a FreeCAD model defined in export_model_to_urdf.py
+# and convert from model -> urdf
+simple_run.create_urdf_of_model(rviz_env_conf)
+# run launch configuration
+simple_run.construct_bash_script(rviz_env_conf)
+
+
 ```
 
 ## Tools:
@@ -60,27 +156,4 @@ by moving the `export_model_to_urdf.py` script next to your simple_run caller sc
 and hard coding parts(as seen in <span style="color:blue"> !!!insert model_pkg example here!!! </span>of the model via ```Model``` class, you can convert a FreeCAD model to a urdf.
 
 A graphical version of this tool is TODO
-
-## ROS2 file structure to use:
-
-```python
-Root_folder:
-	thing_that_calls_this.py
-		src/
-			Config_Storing_Package/
-			urdfs/
-			models/
-			rviz/
-```		
-		
-(ONLY TESTED ON UBUNTU AS OF NOW)
-
-## Contributing:
-
-
-
-## TODO:
-	Add Cmake support
-
-	make FreeCAD converter graphical
 

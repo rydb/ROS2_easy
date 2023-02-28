@@ -21,7 +21,7 @@ class Package():
     }
     """people store files like models, urdfs, etc.. in different ways, refer to this schema for file paths on where to find file types"""
     
-    def __init__(self, name:str, executable_name:str, config:str = None, urdf_name:str = None, output:str= "screen", build:bool= False, optional_launch_file_node_args = None, entry_point:str = None):
+    def __init__(self, name:str, executable_name:str, config:str = None, output:str= "screen", build:bool= False, optional_launch_file_node_args = None, entry_point:str = None):
         #self.parent_pkg: "Package" = parent_pkg
         #"""ROS2 package that is parent of this package."""
         self.name: str = name

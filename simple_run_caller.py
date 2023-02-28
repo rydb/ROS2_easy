@@ -10,10 +10,7 @@ import yaml
 import ros2_easy.simple_run as simple_run
 import os
 
-PROJECT_DIR = os.getcwd() + "/"
-ROS2_CONFIG_PKG = PROJECT_DIR + "model_pkg"
-
-model_pkg = Package("model_pkg", "model", build=True, urdf_name="diff_bot.urdf.xml",entry_point="main")
+model_pkg = Package("model_pkg", "model", build=True, entry_point="main")
 
 rviz2_config_name = "rviz_config_test.rviz"
 rviz2_pkg = Package("rviz2", "rviz2", config=Config(config_file_name=rviz2_config_name), optional_launch_file_node_args= {"arguments": "['-d', share_directory + '/rviz/%s']" % rviz2_config_name})
@@ -46,8 +43,9 @@ Checks for this inside the /models folder for the 'config_store_pkg' for the use
 """
 
 
-#simple_run.replace_setup_py(env_to_use)
-#simple_run.generate_launch_py(env_to_use)
-#simple_run.create_urdf_of_model(env_to_use)
-simple_run.launch_gazebo_world(env_to_use)
-#simple_run.construct_bash_script(env_to_use)
+simple_run.replace_setup_py(env_to_use)
+simple_run.generate_launch_py(env_to_use)
+simple_run.create_urdf_of_model(env_to_use)
+#(WIP IN PROGRESS, NEED HELP FOR TESTING HERE -V)
+#simple_run.launch_gazebo_world(env_to_use)
+simple_run.construct_bash_script(env_to_use)
