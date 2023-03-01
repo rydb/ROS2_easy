@@ -20,11 +20,11 @@
 
 ## Description
 
-This is a collection of tools to remove ROS2's worflow hurdles for python3/colcon based projects
+This is a collection of tools to remove ROS 2's worflow hurdles for python3/colcon based projects
 
 ## Requirements
 
-- [ROS2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
+- [ROS 2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
 - Bash
 - RVIZ2
 - colcon
@@ -47,12 +47,13 @@ freecad.pip install trimesh
 ## To demo
 
 ```
+git clone https://github.com/rydb/ROS2_easy.git
 run simple_run_caller.py
 ```
 
 ## To use:
 
-1: ensure your ROS2 file structure is in the following format:
+1: ensure your ROS 2 file structure is in the following format:
 
 ```
 /project_dir
@@ -133,7 +134,7 @@ when ran will:
 
 - delete old build relics
 
-- generate a .sh bash script which sources ROS2
+- generate a .sh bash script which sources ROS 2
 
 - colcon builds packages you've defined in your launch_configuration(clarify on this later),
 
