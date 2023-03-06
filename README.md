@@ -154,7 +154,7 @@ by moving the `export_model_to_urdf.py` script next to your simple_run caller sc
 ```python
  simple_run.create_urdf_of_model(<your_luanch_configuration>) 
 ```
-and hard coding parts(as seen in <span style="color:blue"> !!!insert model_pkg example here!!! </span>of the model via ```Model``` class, you can convert a FreeCAD model to a urdf.
+you can hard code your model into a Model class equivilent, and then export that as a urdf.
 
 A graphical version of this tool is TODO
 
