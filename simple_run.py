@@ -12,10 +12,14 @@ from dataclasses import dataclass
 from typing import Optional
 from inspect import getsourcefile
 from os.path import abspath
+from shutil import which
 
 from .classes.logger import return_logger
 from .classes.launch_configuration import *
 
+#gazebo version console commands. each constant represents the command that runs gazebo for that particular version.
+GARDEN = "gz"
+CITADEL = "ign"
 
 split_str = "/"
 log_path =  "log/simple_run.log"
@@ -313,8 +317,22 @@ def create_urdf_of_model(launch_conf: launch_configuration):
 
     logger.info("exported FreeCAD model to urdf file, ||%s||" % (launch_conf.urdf_file_name + URDF_FILE_EXTENSION))
 
-#env_to_use = real_rviz_env_conf
-"""ros2 configuration to use, look at lauch configurations to see what each one does."""
+def _detect_gazebo_version():
+      """
+      detect the current version of gazebo installed on system
+      
+      this program checks gazebo versions by latest first, oldest last. so if you have multiple gazebos installed, the latest gazebo will be defaulted to as the "gazebo version" first.
+      NOTE: this only works for source installations
+      """
+      #checks for commands by using python's "which" to see  if the commands for the installation of gazebo can be executed.
+      if which(GARDEN) != None:
+            logger.info("gazebo ignition garden detected, using commands for that")
+            return GARDEN
+      elif which(CITADEL) != None:
+            logger.info("gazebo ignition citadel detected, using commands for that")
+            return CITADEL
+      else:
+            raise "UNKNOWN GAZEBO VERSION. GAZEBO CHANGES COMMAND NAMES ACROSS VERSIONS. ADD GAZEBO COMMAND VERSION FOR YOUR GAZEBO VERSION HERE."
 
 def launch_gazebo_world(launch_conf: launch_configuration):
     """
@@ -323,11 +341,13 @@ def launch_gazebo_world(launch_conf: launch_configuration):
     Refer how to install gazebo(on ubuntu) here:
     https://gazebosim.org/docs/garden/install_ubuntu
     """
+    gazebo_version = _detect_gazebo_version()
+
     gazebo_bash_script_file_path = current_py_folder + "gazebo_bash.sh"
 
     create_urdf_of_model(launch_conf)
     sdf_path =  "%s.sdf" % launch_conf.urdf_path.split(URDF_FILE_EXTENSION)[0]
-    final_command = "gz sdf -p %s" % (launch_conf.urdf_path)
+    final_command = "%s sdf -p %s" % (gazebo_version, launch_conf.urdf_path)
 
 
     sdf_as_bytes = subprocess.check_output(final_command, shell=True)
@@ -361,11 +381,18 @@ def launch_gazebo_world(launch_conf: launch_configuration):
     """
     f.write("export GZ_SIM_RESOURCE_PATH=%s\n\n" % (PROJECT_DIR + "src:"))
 
-    launch_world_command = "gz sim %s\n\n" % sdf_path
+    #the command that starts gazebo is dependent on the version of ignition, so check across each version.
+    launch_gazebo_command = "UNKNOWN_FOR_THIS_VERSION"
+    if(gazebo_version == CITADEL):
+        launch_gazebo_command = "gazebo"
+    else:
+        #if gazebo version unknown, or more likely for future releases, garden, assume the command to start gazebo is "sim". 
+        launch_gazebo_command = "sim"  
+
+    launch_world_command = "%s %s %s\n\n" % (gazebo_version, launch_gazebo_command, sdf_path)
     f.write(launch_world_command)
     f.close()
     os.system("chmod a+x %s" % (gazebo_bash_script_file_path))
     #give bash script execute privleges so It can be executed
-
+    logger.info("spawning gazebo model via command: %s" % gazebo_bash_script_file_path)
     rc = subprocess.call("%s" % gazebo_bash_script_file_path)
-

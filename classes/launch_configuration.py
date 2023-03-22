@@ -41,8 +41,24 @@ class launch_configuration():
     """All packages to be ran by this launch configuration"""
     extra_pkgs_to_build: Optional[typing.List[Package]] = None
     """The packages to be built by colcon in addition to config storing pkg"""
-    external_programs_to_run: Optional[typing.List[Cmd_Program]] = None
-    """External programs to run that aren't ROS2 packages. E.G: Gazebo/Ignition"""
+    external_programs_to_run: Optional[typing.List["function"]] = None
+    """
+    External programs to run that aren't ROS2 packages. E.G: Gazebo/Ignition
+    
+    in order to add a program to this, define a function which uses launch configuration, and pass that function object to to this as part of a list.
+    E.G:
+
+    def gazebo(launch_conf):
+        ..... launch gazebo.....
+
+    external_programs_to_run = [gazebo]
+    """
+
+    @property
+    def gazebo_world_name(self):
+        """retrieve gazebo world name. Should be same as urdf file name"""
+        return "%s.world" % self.urdf_file_name
+
 
     def save_self_as_yaml(self, dir_path=""):
         """save relevant information about this launch configuration into a yaml file"""
