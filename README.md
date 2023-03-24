@@ -24,7 +24,7 @@ This is a collection of tools to remove ROS 2's worflow hurdles for python3/colc
 
 ## Requirements
 
-- [ROS 2](https://docs.ros.org/en/foxy/Installation.html)(only tested on foxy)
+- [ROS 2](https://docs.ros.org/en/humble/Installation.html)
 - Bash
 - RVIZ2
 - colcon

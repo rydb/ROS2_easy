@@ -19,7 +19,7 @@ from .classes.launch_configuration import *
 
 #gazebo version console commands. each constant represents the command that runs gazebo for that particular version.
 GARDEN = "gz"
-CITADEL = "ign"
+FORTRESS = "ign"
 
 split_str = "/"
 log_path =  "log/simple_run.log"
@@ -235,7 +235,7 @@ def generate_launch_py(launch_conf: launch_configuration, ):
         f.write((tab * l[0]) + l[1] + "\n")
     logger.debug("finished creating luanch script, ||%s|| " % launch_conf.launch_file)
 
-def construct_bash_script(launch_conf: launch_configuration, ros_setup_bash_path="/opt/ros/foxy/setup.bash"):
+def construct_bash_script(launch_conf: launch_configuration, ros_setup_bash_path="/opt/ros/humble/setup.bash"):
     """
     Does several things relevant to loading launch configuration:
         1: removes previous build relics
@@ -328,9 +328,9 @@ def _detect_gazebo_version():
       if which(GARDEN) != None:
             logger.info("gazebo ignition garden detected, using commands for that")
             return GARDEN
-      elif which(CITADEL) != None:
+      elif which(FORTRESS) != None:
             logger.info("gazebo ignition citadel detected, using commands for that")
-            return CITADEL
+            return FORTRESS
       else:
             raise "UNKNOWN GAZEBO VERSION. GAZEBO CHANGES COMMAND NAMES ACROSS VERSIONS. ADD GAZEBO COMMAND VERSION FOR YOUR GAZEBO VERSION HERE."
 
@@ -383,7 +383,7 @@ def launch_gazebo_world(launch_conf: launch_configuration):
 
     #the command that starts gazebo is dependent on the version of ignition, so check across each version.
     launch_gazebo_command = "UNKNOWN_FOR_THIS_VERSION"
-    if(gazebo_version == CITADEL):
+    if(gazebo_version == FORTRESS):
         launch_gazebo_command = "gazebo"
     else:
         #if gazebo version unknown, or more likely for future releases, garden, assume the command to start gazebo is "sim". 
