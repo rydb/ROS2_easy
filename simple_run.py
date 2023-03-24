@@ -389,7 +389,7 @@ def launch_gazebo_world(launch_conf: launch_configuration):
         #if gazebo version unknown, or more likely for future releases, garden, assume the command to start gazebo is "sim". 
         launch_gazebo_command = "sim"  
 
-    launch_world_command = "%s %s %s\n\n" % (gazebo_version, launch_gazebo_command, sdf_path)
+    launch_world_command = "%s %s -v4 %s\n\n" % (gazebo_version, launch_gazebo_command, sdf_path)
     f.write(launch_world_command)
     f.close()
     os.system("chmod a+x %s" % (gazebo_bash_script_file_path))
