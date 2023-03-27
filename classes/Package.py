@@ -18,6 +18,7 @@ class Package():
         "MODELS": "models/",
         "RVIZ": "rviz/",
         "PACKAGES": "src/",
+        "WORLDS": "worlds/"
     }
     """people store files like models, urdfs, etc.. in different ways, refer to this schema for file paths on where to find file types"""
     
@@ -99,6 +100,7 @@ class Package():
         "URDFS": self.path + local_directory_for["URDFS"], 
         "MODELS": self.path + local_directory_for["MODELS"],
         "RVIZ": self.path + local_directory_for["RVIZ"],
+        "WORLDS": self.path + local_directory_for["WORLDS"],
     }
     """paths to various config files (urdfs, models, etc..)"""
     

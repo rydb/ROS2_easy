@@ -13,6 +13,7 @@ from typing import Optional
 from inspect import getsourcefile
 from os.path import abspath
 from shutil import which
+from os.path import exists
 
 from .classes.logger import return_logger
 from .classes.launch_configuration import *
@@ -334,41 +335,10 @@ def _detect_gazebo_version():
       else:
             raise "UNKNOWN GAZEBO VERSION. GAZEBO CHANGES COMMAND NAMES ACROSS VERSIONS. ADD GAZEBO COMMAND VERSION FOR YOUR GAZEBO VERSION HERE."
 
-def launch_gazebo_world(launch_conf: launch_configuration):
-    """
-    generate an urdf file, convert that to an sdf file, then launch that sdf file.
+def _kill_gazebo():
+    """kill all things related to gazebo. Should clear anything cached to stop undefined behaviour"""
 
-    Refer how to install gazebo(on ubuntu) here:
-    https://gazebosim.org/docs/garden/install_ubuntu
-    """
-    gazebo_version = _detect_gazebo_version()
-
-    gazebo_bash_script_file_path = current_py_folder + "gazebo_bash.sh"
-
-    create_urdf_of_model(launch_conf)
-    sdf_path =  "%s.sdf" % launch_conf.urdf_path.split(URDF_FILE_EXTENSION)[0]
-    final_command = "%s sdf -p %s" % (gazebo_version, launch_conf.urdf_path)
-
-
-    sdf_as_bytes = subprocess.check_output(final_command, shell=True)
-    """gets gazebo to use its urdf -> sdf utility, and sub process captures its output as bytes"""
-    sdf_as_string = ''.join(map(chr, sdf_as_bytes))
-    """do ??? -^ to convert the bytes output to a string"""
-    sdf_file = open(sdf_path, "w")
-    """open a new file to write the sdf_as_string to."""
-    sdf_file.write(sdf_as_string)
-    sdf_file.close()
-    
-    
-
-    f = open(gazebo_bash_script_file_path, "w")
-    """write down all shell variables requires for gazebo to run in a file, and then run that file as a sub_process using that file"""
-
-
-    f.write("#!/bin/bash\n\n\n")
-    #requires because ???
-    
-    f.write("killall ruby\n\n")
+    os.system("killall ruby")
     """
     for some godforsaken reason, gazebo is labeled 'ruby' as a process, and if ubuntu bug report is running while gazebo is also running, gazebo will glich 
     and NOT close. Meaning, new sdfs wont load properly.. -.-
@@ -379,9 +349,15 @@ def launch_gazebo_world(launch_conf: launch_configuration):
 
     a way to capture the process name of the created process could be added to this in order to prevent hanging of the service
     """
-    f.write("export GZ_SIM_RESOURCE_PATH=%s\n\n" % (PROJECT_DIR + "src:"))
 
-    #the command that starts gazebo is dependent on the version of ignition, so check across each version.
+#def _initialize_gazebo():
+#    """source verything relevant to gazebo"""
+
+def load_world(launch_conf: launch_configuration):
+    """Spawn world that comes with launch_configuration, or if one doesn't exist, create a new empty world and save that."""
+    gazebo_version = _detect_gazebo_version()
+
+    _kill_gazebo()
     launch_gazebo_command = "UNKNOWN_FOR_THIS_VERSION"
     if(gazebo_version == FORTRESS):
         launch_gazebo_command = "gazebo"
@@ -389,8 +365,61 @@ def launch_gazebo_world(launch_conf: launch_configuration):
         #if gazebo version unknown, or more likely for future releases, garden, assume the command to start gazebo is "sim". 
         launch_gazebo_command = "sim"  
 
-    launch_world_command = "%s %s -v4 %s\n\n" % (gazebo_version, launch_gazebo_command, sdf_path)
-    f.write(launch_world_command)
+    world = "empty.sdf"
+    #default world if gazebo world path doesn't exist.
+    if(exists(launch_conf.gazebo_world_path)):
+          world = launch_conf.gazebo_world_path
+    subprocess.call("%s %s %s" % (gazebo_version, launch_gazebo_command, world), shell=True)
+
+
+    
+    
+
+def spawn_model_in_gazebo(launch_conf: launch_configuration):
+    """
+    generate an urdf file, convert that to an sdf file, then launch that sdf in gazebo
+
+    Refer how to install gazebo(on ubuntu) here:
+    https://gazebosim.org/docs/garden/install_ubuntu
+    """
+    gazebo_version = _detect_gazebo_version()
+
+    gazebo_bash_script_file_path = current_py_folder + "spawn_model_commands.sh"
+
+    create_urdf_of_model(launch_conf)
+    #sdf_path =  "%s.sdf" % launch_conf.urdf_path.split(URDF_FILE_EXTENSION)[0]
+    #final_command = "%s sdf -p %s" % (gazebo_version, launch_conf.urdf_path)
+
+
+    #sdf_as_bytes = subprocess.check_output(final_command, shell=True)
+    #"""gets gazebo to use its urdf -> sdf utility, and sub process captures its output as bytes"""
+    #sdf_as_string = ''.join(map(chr, sdf_as_bytes))
+    #"""do ??? -^ to convert the bytes output to a string"""
+    #sdf_file = open(sdf_path, "w")
+    #"""open a new file to write the sdf_as_string to."""
+    #sdf_file.write(sdf_as_string)
+    #sdf_file.close()
+    
+    
+
+    f = open(gazebo_bash_script_file_path, "w")
+    """write down all shell variables requires for gazebo to run in a file, and then run that file as a sub_process using that file"""
+
+
+    f.write("#!/bin/bash\n\n\n")
+    #requires because ???
+
+    f.write("export GZ_SIM_RESOURCE_PATH=%s\n\n" % (PROJECT_DIR + "src:"))
+    f.write("export GAZEBO_RESOURCE_PATH=%s\n\n" % (PROJECT_DIR + "src:"))
+    #write down both gazebo sources for "gazebo-classic" and gazebo garden, as seen here:
+    # https://answers.gazebosim.org/question/28805/gui-err-systempathscc425-unable-to-find-file-with-uri-modelmodel_pkgmodelsbasedae/
+    #the command that starts gazebo is dependent on the version of ignition, so check across each version.
+
+
+    #launch_world_command = "%s %s -v4 %s\n\n" % (gazebo_version, launch_gazebo_command, sdf_path)
+    
+    spawn_model_command = "%s service -s /world/empty/create --reqtype ignition.msgs.EntityFactory --reptype ignition.msgs.Boolean --timeout 10000 --req 'sdf_filename: \"%s\", name: \"%s\"' " % (gazebo_version, launch_conf.urdf_path, launch_conf.urdf_file_name)
+    f.write(spawn_model_command)
     f.close()
     os.system("chmod a+x %s" % (gazebo_bash_script_file_path))
     #give bash script execute privleges so It can be executed

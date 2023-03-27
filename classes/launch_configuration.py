@@ -53,11 +53,9 @@ class launch_configuration():
 
     external_programs_to_run = [gazebo]
     """
+    gazebo_world_name: Optional[str] = None
+    """optional name of gazebo world in /worlds folder for config package. If this is not set, this will defualt to the urdf name."""
 
-    @property
-    def gazebo_world_name(self):
-        """retrieve gazebo world name. Should be same as urdf file name"""
-        return "%s.world" % self.urdf_file_name
 
 
     def save_self_as_yaml(self, dir_path=""):
@@ -88,3 +86,11 @@ class launch_configuration():
     def urdf_path(self):
         """return absolute path to urdf file loaded by this launch configuration"""
         return self.config_store_pkg.path_dict["URDFS"] + self.urdf_file_name + URDF_FILE_EXTENSION
+    
+    @property
+    def gazebo_world_path(self):
+        """return the absolute path to the world file for this launch_configuration"""
+        if(self.gazebo_world_name == None):
+            return self.config_store_pkg.path_dict["WORLDS"] + self.urdf_file_name + ".sdf"
+        else:
+            return self.config_store_pkg.path_dict["WORLDS"] + self.gazebo_world_name + ".sdf"

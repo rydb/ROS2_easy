@@ -21,3 +21,5 @@ rqt_pkg = Package("rqt_gui", "rqt_gui")
 
 robot_state_publisher_pkg = Package("robot_state_publisher", "robot_state_publisher", optional_launch_file_node_args= {"parameters": "[{'use_sim_time': True, 'robot_description': robot_desc}]"})
 """package which reads from urdf file and publishes relevant information about it. Usually read by rviz or sometimes Gazebo"""
+
+ros_gz = Package("ros_gz", "ros_gz")
