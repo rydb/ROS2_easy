@@ -1,4 +1,6 @@
-#FreeCad wiki:
+# MUST GET FREECAD FROM THE SNAP STORE To USE THIS!!
+# sudo snap install freecad
+
 
 import os
 import subprocess
@@ -14,7 +16,7 @@ import yaml
 from inspect import getsourcefile
 from os.path import abspath
 
-from ros2_easy.classes.logger import return_logger
+from classes.logger import return_logger
 
 ###
 # PRE-FREECAD MACRO STARTUP AREA

@@ -31,7 +31,7 @@ current_py_file:str = abspath(getsourcefile(lambda:0))
 """returns path of this python file, no clue what lambda:0 is though"""
 current_py_folder = "".join([x + split_str for x in current_py_file.split(split_str)[0:-1]]) # get folder path from file path
 
-urdf_converter_macro_path = "export_model_to_urdf.py"
+urdf_converter_macro_path = "ros2_easy/export_model_to_urdf.py"
 
 logger = return_logger(log_path, logger_write_mode="w")
 """logger for simple_run"""
