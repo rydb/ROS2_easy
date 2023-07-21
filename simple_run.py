@@ -255,6 +255,9 @@ def construct_bash_script(launch_conf: launch_configuration, ros_setup_bash_path
     #bash needs this becasuse ???
     logger.debug("writing to bash script")
     f.write("#!/bin/bash\n\n\n")
+
+    # unseting GTK_PATH is a requirement for vscode for ROS2 Humble because ??? See: https://askubuntu.com/questions/1462295/ubuntu-22-04-both-eye-of-gnome-and-gimp-failing-with-undefined-symbol-error/1462494
+    f.write("unset GTK_PATH\n\n\n")
     
     #get rid of previous build relics
     f.write("rm -r build install\n\n")
