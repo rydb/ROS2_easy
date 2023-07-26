@@ -600,7 +600,9 @@ urdf_dir = "%ssrc/model_pkg/urdf/" % project_dir
 wheel_left = Model(model_pkg_dir, robot_model_path, "LeftWheel", "continuous", "left_wheel", Generic_PETG)
 wheel_right = Model(model_pkg_dir, robot_model_path, "RightWheel", "continuous", "right_wheel", Generic_PETG)
 
-sub_models=[wheel_left, wheel_right]
+caster_front = Model(model_pkg_dir, robot_model_path, "Caster", "fixed", "caster_wheel", Generic_PETG)
+
+sub_models=[wheel_left, wheel_right, caster_front]
 #sub_models=None
 body = Model(model_pkg_dir, robot_model_path, "BodyBase", "fixed", "base", Generic_PETG, sub_models=sub_models)
 
